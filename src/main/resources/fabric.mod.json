@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "id": "fnaf",
+  "version": "${version}",
+
+  "name": "FNAF Universe",
+  "description": "W.I.P",
+  "authors": [
+	"ShadowLink",
+	"DEG_",
+    "SoggyMustache",
+	"Collinvht",
+	"JurassicAlien",
+	"Voltsu",
+	"RigaM0rty",
+	"KDGames",
+	"Gonk",
+	"CorellionCrusaders",
+	"BonBun Films",
+	"_DZenith"
+	
+  ],
+  "contact": {
+    "homepage": "https://discord.gg/Ycfgt5r",
+    "sources": ""
+  },
+
+  "license": "CC0-1.0",
+  "icon": "assets/fnaf/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "soggy.fnaf.FNAFUniverse"
+    ],
+	"client": [
+	 "soggy.fnaf.FNAFClient"
+	]
+  },
+  "mixins": [
+    "fnaf.mixins.json"
+  ],
+  "accessWidener": "fnaf.accesswidener",
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": "1.16.x",
+	"bookworm": "3.0.x"
+  },
+  "suggests": {
+    "flamingo": "*"
+  }
+}
