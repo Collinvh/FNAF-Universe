@@ -1,11 +1,16 @@
 package soggy.fnaf.common.item;
 
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
 import soggy.fnaf.FNAFUniverse;
 import soggy.fnaf.common.entity.animatronics.FNAFEntities;
+import soggy.fnaf.common.item.items.FlashlightItem;
+import soggy.fnaf.common.item.items.FreddyMaskItem;
+import soggy.fnaf.common.item.items.base.OverridenArmorMaterials;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +20,12 @@ public class FNAFItemInit {
 
     public static void init() {
         SpawnEggs.register();
+        registerItem(new FlashlightItem());
+        registerItem(new FreddyMaskItem(OverridenArmorMaterials.FREDDY, EquipmentSlot.HEAD, new Item.Settings().group(FNAFGroups.FnafItems).rarity(Rarity.EPIC)));
     }
 
-    public static void registerItem(Item item, String name) {
+    public static void registerItem(Item item) {
         ITEMS.add(item);
-        Registry.register(Registry.ITEM, new Identifier(FNAFUniverse.MODID, name), item);
     }
 
     public static class SpawnEggs {
@@ -35,6 +41,10 @@ public class FNAFItemInit {
             registerItem(FOXY, "spawnegg_foxy");
             registerItem(FREDDY, "spawnegg_freddy");
             registerItem(GFREDDY, "spawnegg_gfreddy");
+        }
+        public static void registerItem(Item item, String name) {
+            ITEMS.add(item);
+            Registry.register(Registry.ITEM, new Identifier(FNAFUniverse.MODID, name), item);
         }
     }
 }

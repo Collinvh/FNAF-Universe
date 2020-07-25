@@ -174,7 +174,7 @@ public abstract class EntityAnimatronic extends MobEntityWithAi {
 
                 if(this.mob.getEntityWorld() == Objects.requireNonNull(this.mob.getServer()).getOverworld()) {
                     if(isScaring && scareTimer > 8) {
-                        this.mob.getVehicle().damage(DamageSource.mob(this.mob), setAnimatronicAttackDamage());
+                        this.mob.getVehicle().damage(DamageSource.mob(this.mob), 5);
                     }
 
                     if (isScaring) {
