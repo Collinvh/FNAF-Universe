@@ -1,6 +1,5 @@
 package soggy.fnaf.common.item.items;
 
-import com.google.common.collect.Maps;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -27,11 +26,9 @@ import net.minecraft.world.World;
 import soggy.fnaf.common.item.FNAFGroups;
 import soggy.fnaf.common.item.items.base.FNAFItem;
 
-import java.util.Map;
-
 public class FlashlightItem extends FNAFItem {
-    private Map<PlayerEntity, BlockPos> light = Maps.newHashMap();
-    private Map<PlayerEntity, Boolean> isOn = Maps.newHashMap();
+    private BlockPos lightPos;
+    private boolean on = false;
     private int cooldown;
     public FlashlightItem() {
         super(new Item.Settings().maxCount(1).rarity(Rarity.UNCOMMON).maxDamage(120).group(FNAFGroups.FnafItems), "flashlight");
@@ -45,19 +42,18 @@ public class FlashlightItem extends FNAFItem {
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
-        if (isOn.containsKey(entity) && world.isClient) {
-            if (isOn.get(entity)) {
-                light.put((PlayerEntity) entity, new BlockPos(0,0,0));
-                if(light.get(entity) != entity.getBlockPos()) {
-                    world.setBlockState(light.get(entity), Blocks.GRASS.getDefaultState());
-                    world.setBlockState(light.get(entity), world.getBlockState(light.get(entity)));
-                    light.remove(light.get(entity));
-                    light.put((PlayerEntity) entity, entity.getBlockPos());
-                    world.getLightingProvider().addLightSource(light.get(entity), 15);
+        if (on && world.isClient) {
+            if(selected) {
+                Direction newDir = Direction.fromRotation(entity.yaw);
+                if (lightPos == null)  {
+                    if(world.getBlockState(entity.getBlockPos().offset(newDir, 1)) == Blocks.AIR.getDefaultState()) lightPos = entity.getBlockPos().offset(newDir, 2);
+                }
+                if(lightPos != entity.getBlockPos().offset(newDir)) {
+                    updateSource(lightPos, world, entity.getBlockPos(), newDir, true);
                 }
             } else {
-                isOn.put((PlayerEntity) entity, false);
-                removeSource((PlayerEntity) entity, light.get(entity), world, null, null, false);
+                on = false;
+                updateSource(lightPos, world, null, null, false);
             }
         }
     }
@@ -65,27 +61,26 @@ public class FlashlightItem extends FNAFItem {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if(world.isClient) {
-            if (!isOn.containsKey(user)) {
+            if (!on) {
                 user.getItemCooldownManager().set(this, 75);
-                isOn.put(user, true);
+                on = true;
             } else {
-                isOn.remove(user);
-                removeSource(user, light.get(user), world, null, null, false);
+                on = false;
+                updateSource(lightPos, world, null, null, false);
             }
         }
         return TypedActionResult.pass(user.getStackInHand(hand));
     }
 
-    public void removeSource(PlayerEntity user, BlockPos oldPos, World world, BlockPos newPos, Direction dir, boolean newsource) {
+    public void updateSource(BlockPos oldPos, World world, BlockPos newPos, Direction dir, boolean newsource) {
         if(world.isClient) {
             if (oldPos != newPos) {
                 BlockState defaultstate = world.getBlockState(oldPos);
                 world.setBlockState(oldPos, Blocks.GRASS_BLOCK.getDefaultState());
                 world.setBlockState(oldPos, defaultstate);
                 if(newsource && world.getBlockState(newPos.offset(dir, 1)) == Blocks.AIR.getDefaultState()) {
-                    light.remove(oldPos);
-                    light.put(user, newPos);
-                    world.getLightingProvider().addLightSource(newPos, 15);
+                    lightPos = newPos.offset(dir, 2);
+                    world.getLightingProvider().addLightSource(lightPos, 15);
                 }
             }
         }
