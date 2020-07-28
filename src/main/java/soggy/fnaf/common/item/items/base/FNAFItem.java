@@ -10,4 +10,6 @@ public class FNAFItem extends Item {
         super(settings);
         Registry.register(Registry.ITEM, new Identifier(FNAFUniverse.MODID, name), this);
     }
+
+
 }

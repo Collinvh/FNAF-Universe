@@ -17,11 +17,11 @@ import java.util.List;
 
 public class FNAFItemInit {
     public static final List<Item> ITEMS = new ArrayList<>();
-
+    public static final FreddyMaskItem MASK = new FreddyMaskItem(OverridenArmorMaterials.FREDDY, EquipmentSlot.HEAD, new Item.Settings().group(FNAFGroups.FnafItems).rarity(Rarity.EPIC));
     public static void init() {
         SpawnEggs.register();
         registerItem(new FlashlightItem());
-        registerItem(new FreddyMaskItem(OverridenArmorMaterials.FREDDY, EquipmentSlot.HEAD, new Item.Settings().group(FNAFGroups.FnafItems).rarity(Rarity.EPIC)));
+        registerItem(MASK);
     }
 
     public static void registerItem(Item item) {
